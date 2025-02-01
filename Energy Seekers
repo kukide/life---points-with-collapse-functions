@@ -1,0 +1,62 @@
+import random
+
+class Agent:
+    def __init__(self, x, y, energy):
+        self.x = x
+        self.y = y
+        self.energy = energy
+        self.memory = []  # List to store recent observations
+
+    def observe(self, environment):
+        # Get information about surrounding cells, food, obstacles, etc.
+        observation = environment.get_observation(self.x, self.y)
+        self.memory.append(observation)
+        if len(self.memory) > 5: # Limit memory size
+            self.memory.pop(0)
+        return observation
+
+    def collapse(self, observation):
+        # Implement the rule-based decision-making (collapse operator)
+        if self.energy < E_low:
+            # Rule 1: Move towards nearest food
+            action = self.move_towards_food(observation)
+        elif self.energy < E_high and self.food_in_memory():
+            # Rule 2: Move towards remembered food location
+            action = self.move_towards_memory_food()
+        else:
+            # Rule 3: Random exploration
+            action = self.random_move()
+        return action
+    
+    # ... (Implementation for move_towards_food, food_in_memory, random_move, etc.)
+
+class Environment:
+    def __init__(self, width, height, num_food, num_obstacles):
+        self.width = width
+        self.height = height
+        self.food = []  # List of food particle locations
+        self.obstacles = [] # List of obstacle locations
+        # ... (Initialize food and obstacles randomly)
+
+    def get_observation(self, x, y):
+        # Return information about the surroundings of (x, y)
+        # ...
+
+    def update(self):
+        # Replenish food, etc.
+        # ...
+
+# Initialize environment and agents
+environment = Environment(width=50, height=50, num_food=20, num_obstacles=30)
+agents = [Agent(x=random.randint(0, 49), y=random.randint(0, 49), energy=100) for _ in range(10)]
+
+# Simulation loop
+for _ in range(num_time_steps):
+    for agent in agents:
+        observation = agent.observe(environment)
+        action = agent.collapse(observation)
+        agent.act(action, environment)  # Update agent state based on action
+    environment.update()
+
+    # Collect data for analysis (e.g., average energy, survival rate)
+    # ...
